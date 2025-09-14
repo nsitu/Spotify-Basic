@@ -15,5 +15,5 @@ CLIENT_SECRET=abc123***
 ```
 
 ## Vercel 
-This project hsa been setup for compatibility with Vercel. [Read more](https://vercel.com/docs/frameworks/backend/express) about how Express apps are hosted on Vercel. 
+This project has been setup for compatibility with Vercel. Did you know that you can host an Express app on Vercel as a serverless function? In this way your static assets are hosted efficiently, but you can also deploy a basic backend as well. [Read more](https://vercel.com/docs/frameworks/backend/express) about how Express apps are hosted on Vercel. 
 
