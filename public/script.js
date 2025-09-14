@@ -1,34 +1,15 @@
-const main = document.querySelector('main')
+import { getToken } from './token.js'
 
-fetch('/token')
-  .then(response => response.json())
-  .then(token => {
-    // create headers using a fresh token
-    options = {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer ' + token.access_token
-      }
-    }
-    // see also: https://developer.spotify.com/documentation/web-api/reference/get-recommendations
-    const url = new URL('https://api.spotify.com/v1/browse/new-releases')
-
-    // Fetch 
-    fetch(url, options)
-      .then(response => response.json())
-      .then(response => {
-        console.log(response)
-        display(response.albums?.items)
-      })
-      .catch(err => console.error(err))
-
-
+async function fetchNewReleases(token) {
+  const url = new URL('https://api.spotify.com/v1/browse/new-releases')
+  return fetch(url, {
+    method: 'GET',
+    headers: { Authorization: 'Bearer ' + token }
   })
-
+}
 
 const display = (items) => {
   items.forEach(item => {
-    const div = document.createElement('div')
     // Find the largest image (highest width)
     let largestImg = null;
     if (item.images && item.images.length > 0) {
@@ -39,10 +20,28 @@ const display = (items) => {
     if (item.artists && item.artists.length > 0) {
       artists = '<p>Artists: ' + item.artists.map(a => `<a href="${a.external_urls.spotify}" target="_blank">${a.name}</a>`).join(', ') + '</p>';
     }
+    const div = document.createElement('div')
     div.innerHTML =
       `${largestImg ? `<img src="${largestImg.url}" alt="${item.name}" style="max-width:100%;height:auto;" />` : ''}
       <h3>${item.name}</h3> 
       ${artists}`
-    main.appendChild(div)
+    document.querySelector('main').appendChild(div)
   })
 }
+
+try {
+  let token = await getToken()
+  let response = await fetchNewReleases(token.access_token)
+
+  // If token is invalid/expired server-side, refresh and retry once
+  if (response.status === 401) {
+    localStorage.removeItem(TOKEN_KEY)
+    token = await getToken()
+    response = await fetchNewReleases(token.access_token)
+  }
+  const json = await response.json()
+  display(json.albums?.items || [])
+} catch (err) {
+  console.error(err)
+}
+

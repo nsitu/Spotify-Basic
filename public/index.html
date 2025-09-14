@@ -3,6 +3,11 @@
 
 <head>
   <title>Spotify Auth Demo</title>
+  <link
+    rel="icon"
+    type="image/png"
+    href="favicon.png"
+  />
   <!--   <meta http-equiv="Cache-Control" content="no-store" /> -->
 
   <!-- Styling for our Web data connector. -->
@@ -19,9 +24,10 @@
 <body>
 
   <h2>Spotify New Releases</h2>
-  <p>This Demo loads recommendations from Spotify. It uses NodeJS to generate and refresh Tokens as needed. Client
-    Credentials are stored in the NodeJS environment. The parameters for the recommendations are hard-coded, but you
-    could probably build a nice UI on top of this. </p>
+  <p>This Demo loads new releases from Spotify. It exposes a /token endpoint via NodeJS/Express to generate a fresh
+    token. Spotify Credentials are stored as server environment variables. The frontend will request a new token if the
+    old one approaches expiry. If a request ever fails, it will retry with a fresh token.
+  </p>
   <main>
   </main>
 
@@ -30,7 +36,7 @@
 
 <script
   src="script.js"
-  type="text/javascript"
+  type="module"
 ></script>
 
 </html>
