@@ -42,7 +42,9 @@ app.use(express.static('public'))
 // In production on Vercel, requests to '/' won't be handled by express.static.
 // Redirect to the static index.html which Vercel serves from public/ via the Edge Network.
 app.get('/', (req, res) => {
-  res.sendFile('./public/index.html')
+  // Avoid Express's sendFile absolute path requirement in serverless envs
+  // and let Vercel's static hosting serve /public/index.html at /index.html
+  res.redirect('/index.html')
 })
 
 
@@ -60,7 +62,7 @@ app.get('/token', async (req, res) => {
 })
 
 
-const port = process.env.PORT || 3004
+const port = 3004
 // Start listening for requests.
 app.listen(port, () => {
   console.log(`Express is live at http://localhost:${port}`)
