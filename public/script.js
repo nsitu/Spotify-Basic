@@ -40,6 +40,7 @@ try {
     response = await fetchNewReleases(token.access_token)
   }
   const json = await response.json()
+  console.log(json)
   display(json.albums?.items || [])
 } catch (err) {
   console.error(err)

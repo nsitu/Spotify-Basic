@@ -47,7 +47,6 @@ app.get('/', (req, res) => {
   res.redirect('/index.html')
 })
 
-
 app.get('/token', async (req, res) => {
   try {
     const freshToken = await getToken()
@@ -62,7 +61,7 @@ app.get('/token', async (req, res) => {
 })
 
 
-const port = 3004
+const port = 3000
 // Start listening for requests.
 app.listen(port, () => {
   console.log(`Express is live at http://localhost:${port}`)
