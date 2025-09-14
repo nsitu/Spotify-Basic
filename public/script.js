@@ -1,5 +1,7 @@
 import { getToken } from './token.js'
 
+// fetchNewReleases(token): asks Spotify for the latest album releases using your access token.
+// Input: token string from getToken(). Output: a fetch() Response you can parse.
 async function fetchNewReleases(token) {
   const url = new URL('https://api.spotify.com/v1/browse/new-releases')
   return fetch(url, {
@@ -8,6 +10,8 @@ async function fetchNewReleases(token) {
   })
 }
 
+// display(items): takes an array of album objects and adds them to the page.
+// It picks the largest available image, shows the album name, and links to the artists.
 const display = (items) => {
   items.forEach(item => {
     // Find the largest image (highest width)
@@ -29,13 +33,14 @@ const display = (items) => {
   })
 }
 
+// Main script logic: get a token, fetch new releases, display them.
 try {
   let token = await getToken()
   let response = await fetchNewReleases(token.access_token)
 
   // If token is invalid/expired server-side, refresh and retry once
   if (response.status === 401) {
-    localStorage.removeItem(TOKEN_KEY)
+    localStorage.removeItem('spotify_token')
     token = await getToken()
     response = await fetchNewReleases(token.access_token)
   }

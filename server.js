@@ -2,6 +2,8 @@ import express from 'express'
 
 const app = express();
 
+// getToken(): asks Spotify for a new app-only access token using your
+// CLIENT_ID and CLIENT_SECRET. Returns JSON with access_token and expiry info.
 const getToken = async () => {
   const currentTimestamp = Math.floor(Date.now() / 1000)
   if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
@@ -41,12 +43,14 @@ app.use(express.static('public'))
 
 // In production on Vercel, requests to '/' won't be handled by express.static.
 // Redirect to the static index.html which Vercel serves from public/ via the Edge Network.
+// Route handler: sends the browser to /index.html so your static page loads.
 app.get('/', (req, res) => {
   // Avoid Express's sendFile absolute path requirement in serverless envs
   // and let Vercel's static hosting serve /public/index.html at /index.html
   res.redirect('/index.html')
 })
 
+// Route handler /token: returns a fresh token to the frontend, with short-lived cache headers disabled.
 app.get('/token', async (req, res) => {
   try {
     const freshToken = await getToken()
@@ -62,7 +66,8 @@ app.get('/token', async (req, res) => {
 
 
 const port = 3000
-// Start listening for requests.
+// app.listen(...): starts the web server and prints a message when it's ready.
+// You can then open the URL in your browser to use the app locally.
 app.listen(port, () => {
   console.log(`Express is live at http://localhost:${port}`)
 })
